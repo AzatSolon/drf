@@ -23,7 +23,7 @@ class Lesson(models.Model):
     prewie = models.ImageField(
         upload_to="lessons/prewies_photo", verbose_name="превью", **NULLEBELL
     )
-    url = models.TextField(verbose_name="Cсылка на видео")
+    url = models.TextField(verbose_name="Cсылка на видео", **NULLEBELL)
     course = models.ForeignKey(
         Course,
         on_delete=models.SET_NULL,
