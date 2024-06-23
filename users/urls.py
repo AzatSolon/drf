@@ -6,6 +6,5 @@ from users.apps import UsersConfig
 app_name = UsersConfig.name
 
 urlpatterns = [
-    path('', LoginView.as_view(), name='login'),
-
+    path("", LoginView.as_view(), name="login"),
 ]
