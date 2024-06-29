@@ -7,7 +7,7 @@ from lessons.views import (
     LessonRetrieveApiView,
     LessonDestroyApiView,
     LessonUpdateApiView,
-    LessonCreateApiView,
+    LessonCreateAPIView,
 )
 from lessons.apps import LessonsConfig
 
@@ -19,7 +19,7 @@ router.register("", CourseViewSet)
 urlpatterns = [
     path("lessons/", LessonListApiView.as_view(), name="lessons_list"),
     path("lessons/<int:pk>/", LessonRetrieveApiView.as_view(), name="lessons_retrieve"),
-    path("lessons/create/", LessonCreateApiView.as_view(), name="lessons_create"),
+    path("lessons/create/", LessonCreateAPIView.as_view(), name="lessons_create"),
     path(
         "lessons/<int:pk>/delete/",
         LessonDestroyApiView.as_view(),

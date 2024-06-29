@@ -11,7 +11,7 @@ from lessons.models import Course, Lesson
 from lessons.serializers import (
     CourseSerializer,
     LessonSerializer,
-    LessonDetailSerializer,
+    CourseDetailSerializer,
 )
 
 
@@ -19,19 +19,25 @@ class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
 
+    def get_queryset(self):
+        if not self.request.user.is_staff:
+            return Course.objects.filter(owner=self.request.user)
 
-class LessonViewSet(ModelViewSet):
-    queryset = Lesson.objects.all()
+        elif self.request.user.is_staff:
+            return Course.objects.all()
 
     def get_serializer_class(self):
         if self.action == "retrieve":
-            return LessonDetailSerializer
-        return LessonSerializer
+            return CourseDetailSerializer
+        return CourseSerializer
 
 
-class LessonCreateApiView(CreateAPIView):
-    queryset = Lesson.objects.all()
+class LessonCreateAPIView(CreateAPIView):
     serializer_class = LessonSerializer
+    queryset = Lesson.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 
 class LessonListApiView(ListAPIView):
