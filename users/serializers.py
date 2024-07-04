@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from users.models import User, Payment
 
@@ -21,7 +22,7 @@ class PaymentSerializer(serializers.ModelSerializer):
 class CreateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("email", "username", "password")
+        fields = "__all__"
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
@@ -31,3 +32,15 @@ class CreateUserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data["password"])
         user.save()
         return user
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Добавление пользовательских полей в токен
+        token["username"] = user.username
+        token["email"] = user.email
+
+        return token

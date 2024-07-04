@@ -27,7 +27,7 @@ class Course(models.Model):
 class Lesson(models.Model):
     title = models.CharField(max_length=50, verbose_name="Название урока")
     description = models.TextField(
-        verbose_name="Описание", help_text="Введите описание"
+        verbose_name="Описание", help_text="Введите описание", **NULLEBELL
     )
     prewie = models.ImageField(
         upload_to="lessons/prewies_photo", verbose_name="Превью", **NULLEBELL
