@@ -1,14 +1,28 @@
-from rest_framework import generics, status
-from rest_framework.viewsets import ModelViewSet
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
-from django_filters.rest_framework import DjangoFilterBackend, FilterSet
+from rest_framework import generics
+from rest_framework.permissions import AllowAny
+from rest_framework.viewsets import ModelViewSet
+from rest_framework_simplejwt.views import TokenObtainPairView
+
 from users.models import User, Payment
-from users.serializers import UserSerializer, CreateUserSerializer, PaymentSerializer
+from users.serializers import (
+    UserSerializer,
+    CreateUserSerializer,
+    PaymentSerializer,
+    MyTokenObtainPairSerializer,
+)
 
 
 class UserRegisterView(generics.CreateAPIView):
     serializer_class = CreateUserSerializer
     queryset = User.objects.all()
+    permission_classes = (AllowAny,)
+
+    def perform_create(self, serializer):
+        user = serializer.save(is_active=True)
+        user.set_password(self.request.data["password"])
+        user.save()
 
 
 class UserRetrieveView(generics.RetrieveAPIView):
@@ -36,3 +50,7 @@ class PaymentViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     search_fields = ["payment_method"]
     ordering_fields = ["payments_date"]
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
