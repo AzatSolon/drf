@@ -9,6 +9,7 @@ class IsModer(permissions.BasePermission):
 
 
 class IsOwner(permissions.BasePermission):
+    massage = "У нас нет прав доступа."
 
     def has_object_permission(self, request, view, obj):
         return request.user == obj.owner
