@@ -8,7 +8,7 @@ from users.models import User
 
 class LessonTestCase(APITestCase):
     """
-    Тест урока
+    Тест урока #coverage run --source='.' manage.py test
     """
 
     def setUp(self) -> None:
