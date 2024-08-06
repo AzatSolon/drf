@@ -2,9 +2,16 @@ FROM python:3.12
 
 WORKDIR /app
 
-COPY /requirements.txt /
+RUN pip install poetry
 
-RUN pip install -r /requirements.txt
+COPY poetry.lock pyproject.toml /app/
 
-Copy . .
+RUN poetry config virtualenvs.create false && poetry install --no-dev --no-root
 
+COPY . /app/
+
+# Применение миграций
+#RUN python manage.py migrate
+
+# Команда для запуска приложения при старте контейнера
+#CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
