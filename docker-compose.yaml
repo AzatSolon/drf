@@ -73,5 +73,5 @@ services:
         condition: service_started
 
 volumes:
-  volume_name:
+  pg_data:
     name: volume_name
