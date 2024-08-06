@@ -1,4 +1,3 @@
-
 import datetime
 import pytz
 from celery import shared_task
@@ -28,10 +27,12 @@ def check_last_update_date(pk):
             course.save(update_fields=["last_update_date"])
 
             # print("Пора!")
-        # else:
-        #     print("Рановато.")
+            # else:
+            #     print("Рановато.")
 
-            subscription = Subscription.objects.filter(course_id=pk, sign_of_subscription=True)
+            subscription = Subscription.objects.filter(
+                course_id=pk, sign_of_subscription=True
+            )
             user_id_list = []
             if subscription:
                 for sub in subscription:
@@ -65,6 +66,8 @@ def check_login():
                 # print(f"Пользователь '{user.email}' ва-а-ще ни разу не логинился!")
                 user.is_active = False
                 user.save()
-            elif datetime.datetime.now(pytz.timezone("Europe/Moscow")) - user.last_login > datetime.timedelta(weeks=4):
+            elif datetime.datetime.now(
+                pytz.timezone("Europe/Moscow")
+            ) - user.last_login > datetime.timedelta(weeks=4):
                 user.is_active = False
                 user.save()
