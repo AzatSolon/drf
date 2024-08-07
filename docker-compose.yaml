@@ -4,9 +4,7 @@ networks:
 
 services:
   redis:
-    image: redis
-    networks:
-      - drf_network
+    image: redis:latest
     healthcheck:
       test: ['CMD', 'redis-cli', 'ping']
       interval: 1m30s
@@ -23,7 +21,7 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', '-c', 'pg_isready -d $POSTGRES_PASSWORD -U -$POSTGRES_USER']
+      test: ['CMD-SHELL', '-c', 'pg_isready -d $POSTGRES_DB -U $POSTGRES_USER']
       interval: 10s
       retries: 5
       timeout: 5s
@@ -34,8 +32,6 @@ services:
     ports:
       - '8000:8000'
     command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-    networks:
-      - drf_network
     depends_on:
       db:
         condition: service_healthy
@@ -44,8 +40,6 @@ services:
 
   celery:
     build: .
-    networks:
-      - drf_network
     tty: true
     command: celery -A config worker -l INFO
     volumes:
@@ -60,8 +54,6 @@ services:
 
   celery_beat:
     build: .
-    networks:
-      - drf_network
     tty: true
     command: [ "sh", "-c", "celery -A config beat -l INFO && celery -A config -l info -P gevent" ]
     env_file:
